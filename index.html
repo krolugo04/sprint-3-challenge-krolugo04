@@ -198,25 +198,29 @@
       //      console.log(list) // prints ["a"]
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
+
       constructor(...antNames) {
-     this.ants = antNames.map(name => ({ name, health: 100 }));
-     }
+    this.ants = antNames.map(name => ({ name, health: 100 }));
+   }
 
-     work() {
-      if (this.ants.length === 0) {
+   work() {
+    if (this.ants.length === 0) {
       return "No ants here. Did you work them to death?";
-     }
-
-    
-     this.ants = this.ants.map(ant => {
-      ant.health -= 20;
-      return ant.health > 0 ? ant : null; 
-      }).filter(ant => ant); 
-
-     return `${this.ants.length} ants starting work!`;
     }
+    let actual, description = 'Working returns the correct string'
+    let expected = ["3 ants starting work!", "1 ant starting work!", "No ants here. Did you work them to death?"]
+   try {
+    const farm = new AntFarm('Jess', 'Blake', 'Jess')
+    farm.ants[0].health++
+    actual = []
+    farm.work(); farm.work(); farm.work(); farm.work()
+    actual.push(farm.work()); actual.push(farm.work()); actual.push(farm.work())
+   } catch (err) { actual = err.message }
+   return [description, expected, actual]
+    return `${workingAntsCount} ant${workingAntsCount !== 1 ? 's' : ''} starting work!`;
+   }
 
-    feed(antName) {
+   feed(antName) {
     const ant = this.ants.find(ant => ant.name === antName);
     if (ant) {
       ant.health += 15;
@@ -224,8 +228,17 @@
     } else {
       return `${antName} not found!`;
     }
-   }
   }
+
+  removeAnt(antName) {
+    this.ants = this.ants.filter(ant => ant.name !== antName);
+  }
+ }
+
+
+
+    
+    
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
