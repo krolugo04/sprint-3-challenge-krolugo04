@@ -218,30 +218,21 @@
 
     return `${numAnts} ants starting work!`;
   }
-  feed(...antNames) {
-  const uniqueAntNames = new Set(antNames);
-  const antIndexMap = {};
-  for (let i = 0; i < this.ants.length; i++) {
-    antIndexMap[this.ants[i].name] = i;
+   
+  feed(antNames) {
+    
+    const namesToFeed = Array.isArray(antNames) ? antNames : [antNames];
+
+    const fedAnts = this.ants.filter((ant) => namesToFeed.includes(ant.name));
+    fedAnts.forEach((ant) => (ant.health += 15));
+    
+    return fedAnts.length > 0
+      ? "Yum!"
+      : namesToFeed.map((name) => `${name} not found!`).join(", ");
   }
-  let fedAnts = 0;
-this.ants = this.ants.map(ant => {
-    if (uniqueAntNames.has(ant.name)) {
-      ant.health = Math.min(ant.health + 15, 100); 
-      fedAnts++;
-      uniqueAntNames.delete(ant.name); 
-    }
-    return ant;
-  });
-
-  if (fedAnts === 0) {
-    return `${antNames.join(', ')} not found!`;
-  }
-
-  return "Yum!";
 }
+  
 
-}
 
 
 
