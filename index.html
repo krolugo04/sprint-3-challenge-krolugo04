@@ -198,38 +198,52 @@
       //      console.log(list) // prints ["a"]
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
-
-      constructor(...antNames) {
+  constructor(...antNames) {
     this.ants = antNames.map(name => ({ name, health: 100 }));
-   }
-     work() {
-      if (this.ants.length === 0) {
-        return "No ants here. Did you work them to death?";
+  }
+
+  work() {
+    const numAnts = this.ants.length;
+    if (numAnts === 0) {
+      return "No ants here. Did you work them to death?";
     }
-    const workingAntsCount = this.ants.length;
-    this.ants.forEach(ant => {
+
+    this.ants = this.ants.map(ant => {
+      if (ant.health - 20 > 0) {
         ant.health -= 20;
-        if (ant.health <= 0) {
-            this.removeAnt(ant.name);
-        }
-    });
-    return `${workingAntsCount} ant${workingAntsCount !== 1 ? 's' : ''} starting work!`;
- }
+        return ant;
+      }
+      return null;
+    }).filter(ant => ant);
 
-   feed(antName) {
-    const ant = this.ants.find(ant => ant.name === antName);
-    if (ant) {
-      ant.health += 15;
-      return "Yum!";
-    } else {
-      return `${antName} not found!`;
+    return `${numAnts} ants starting work!`;
+  }
+  feed(...antNames) {
+  const uniqueAntNames = new Set(antNames);
+  const antIndexMap = {};
+  for (let i = 0; i < this.ants.length; i++) {
+    antIndexMap[this.ants[i].name] = i;
+  }
+  let fedAnts = 0;
+this.ants = this.ants.map(ant => {
+    if (uniqueAntNames.has(ant.name)) {
+      ant.health = Math.min(ant.health + 15, 100); 
+      fedAnts++;
+      uniqueAntNames.delete(ant.name); 
     }
+    return ant;
+  });
+
+  if (fedAnts === 0) {
+    return `${antNames.join(', ')} not found!`;
   }
 
-  removeAnt(antName) {
-    this.ants = this.ants.filter(ant => ant.name !== antName);
-  }
- }
+  return "Yum!";
+}
+
+}
+
+
 
 
 
